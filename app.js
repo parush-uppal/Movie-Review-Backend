@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require("express");
 const morgan = require("morgan");
 require('express-async-errors')
@@ -14,6 +15,7 @@ const { handelNotFound } = require("./utils/helper");
 const app = express();
 app.use(cors())
 app.use(express.json())
+app.use(express.static(path.join(__dirname,'public')))
 app.use(morgan('dev'))
 app.use("/api/user", userRouter);
 app.use("/api/actor", actorRouter);
