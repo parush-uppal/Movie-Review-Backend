@@ -3,7 +3,11 @@ const jwt = require("jsonwebtoken");
 const EmailVerificationToken = require("../models/emailVerificationToken");
 const PasswordResetToken = require("../models/passwordResetToken");
 const { isValidObjectId } = require("mongoose");
-const { generateOTP, generateMailTransporter } = require("../utils/mail");
+const {
+  generateOTP,
+  generateMailTransporter,
+  sendMail,
+} = require("../utils/mail");
 const { sendError, generateRandomBytes } = require("../utils/helper");
 
 exports.create = async (req, res) => {
@@ -29,17 +33,29 @@ exports.create = async (req, res) => {
 
   // send that otp to our user
 
-  var transport = generateMailTransporter();
+  const htmlContent = `
+  <p>You verification OTP</p>
+    <h1>${OTP}</h1>
+  `;
 
-  transport.sendMail({
-    from: "verification@reviewapp.com",
-    to: newUser.email,
-    subject: "Email Verification",
-    html: `
-      <p>You verification OTP</p>
-      <h1>${OTP}</h1>
-    `,
-  });
+  await sendMail(
+    newUser.name,
+    newUser.email,
+    "Email Verification",
+    htmlContent
+  );
+
+  // var transport = generateMailTransporter();
+
+  // transport.sendMail({
+  //   from: "verification@reviewapp.com",
+  //   to: newUser.email,
+  //   subject: "Email Verification",
+  //   html: `
+  //     <p>You verification OTP</p>
+  //     <h1>${OTP}</h1>
+  //   `,
+  // });
 
   res.status(201).json({
     user: {
@@ -71,14 +87,26 @@ exports.verifyEmail = async (req, res) => {
 
   await EmailVerificationToken.findByIdAndDelete(token._id);
 
-  var transport = generateMailTransporter();
+  
+  const htmlContent = `
+  <p>Welcome to our app and thanks for choosing us</p>
+  `;
 
-  transport.sendMail({
-    from: "verification@reviewapp.com",
-    to: user.email,
-    subject: "Welcome Email",
-    html: "<h1>Welcome to our app and thanks for choosing us.</h1>",
-  });
+  await sendMail(
+    user.name,
+    user.email,
+    "Welcome to The Film Feed",
+    htmlContent
+  );
+
+  // var transport = generateMailTransporter();
+
+  // transport.sendMail({
+  //   from: "verification@reviewapp.com",
+  //   to: user.email,
+  //   subject: "Welcome Email",
+  //   html: "<h1>Welcome to our app and thanks for choosing us.</h1>",
+  // });
   const jwtToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
   res.json({
     user: {
@@ -124,17 +152,31 @@ exports.resendEmailVerificationToken = async (req, res) => {
 
   // send that otp to our user
 
-  var transport = generateMailTransporter();
+   
+  const htmlContent = `
+  <p>You verification OTP</p>
+    <h1>${OTP}</h1>
+  `;
 
-  transport.sendMail({
-    from: "verification@reviewapp.com",
-    to: user.email,
-    subject: "Email Verification",
-    html: `
-      <p>You verification OTP</p>
-      <h1>${OTP}</h1>
-    `,
-  });
+  await sendMail(
+    user.name,
+    user.email,
+    "Email Verification",
+    htmlContent
+  );
+  
+
+  // var transport = generateMailTransporter();
+
+  // transport.sendMail({
+  //   from: "verification@reviewapp.com",
+  //   to: user.email,
+  //   subject: "Email Verification",
+  //   html: `
+  //     <p>You verification OTP</p>
+  //     <h1>${OTP}</h1>
+  //   `,
+  // });
 
   res.json({
     message: "New OTP has been sent to your registered email accout.",
@@ -162,18 +204,32 @@ exports.forgotPassword = async (req, res) => {
   });
   await newPasswordResetToken.save();
 
-  const resetPasswordUrl = `http://localhost:3000/auth/reset-password?token=${token}&id=${user._id}`;
-  var transport = generateMailTransporter();
+  const resetPasswordUrl = `https://the-film-feed.onrender.com/auth/reset-password?token=${token}&id=${user._id}`;
+  // var transport = generateMailTransporter();
 
-  transport.sendMail({
-    from: "security@reviewapp.com",
-    to: user.email,
-    subject: "Reset Password Link",
-    html: `
-      <p>Click here to reset password</p>
-      <a href='${resetPasswordUrl}'>Change Password</a>
-    `,
-  });
+
+  const htmlContent = `
+  <p>Click here to reset password</p>
+  <a href='${resetPasswordUrl}'>Change Password</a>
+  `;
+
+  await sendMail(
+    user.name,
+    user.email,
+    "Reset Password Link",
+    htmlContent
+  );
+  
+
+  // transport.sendMail({
+  //   from: "security@reviewapp.com",
+  //   to: user.email,
+  //   subject: "Reset Password Link",
+  //   html: `
+  //     <p>Click here to reset password</p>
+  //     <a href='${resetPasswordUrl}'>Change Password</a>
+  //   `,
+  // });
 
   res.json({ message: "Link sent to your email!" });
 };
