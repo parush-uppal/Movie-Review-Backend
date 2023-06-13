@@ -69,7 +69,7 @@ module.exports = router;
 router.delete("/:movieId", isAuth, isAdmin, removeMovie);
 router.get("/movies", isAuth, isAdmin, getMovies);
 router.get("/for-update/:movieId", isAuth, isAdmin, getMovieForUpdate);
-router.get('/search',isAuth,isAdmin,searchMovies)
+router.get('/search',searchMovies)
 
 
 // for normal users

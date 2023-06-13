@@ -352,7 +352,7 @@ exports.searchMovies = async (req, res) => {
 
   if (!title.trim()) return sendError(res, "Invalid request!");
 
-  const movies = await Movie.find({ title: { $regex: title, $options: "i" } });
+  const movies = await Movie.find({ title: { $regex: title, $options: "i" },status:"Public" });
   res.json({
     results: movies.map((m) => {
       return {
