@@ -11,6 +11,7 @@ const movieRouter = require("./routes/movie")
 const reviewRouter = require("./routes/review")
 const adminRouter = require("./routes/admin");
 const { handelNotFound } = require("./utils/helper");
+const serverless = require('serverless-http');
 var cron = require('node-cron');
 
 const app = express();
@@ -46,8 +47,12 @@ app.post("/sign-in",
     res.send("<h1>Hello I am from your backend about</h1>");
   });
 
-const PORT = process.env.PORT || 8000
-app.listen(PORT, () => {
-  console.log("the port is listening on port " + PORT);
-  // Dummy
-});
+
+// Code to run it locally
+// const PORT = process.env.PORT || 8000
+// app.listen(PORT, () => {
+//   console.log("the port is listening on port " + PORT);
+//   // Dummy
+// });
+
+module.exports.handler = serverless(app); // Export the app for serverless
