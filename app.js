@@ -12,7 +12,7 @@ const reviewRouter = require("./routes/review")
 const adminRouter = require("./routes/admin");
 const { handelNotFound } = require("./utils/helper");
 const serverless = require('serverless-http');
-var cron = require('node-cron');
+
 
 const app = express();
 app.use(cors())
@@ -30,11 +30,6 @@ app.use((err,req,res,next)=>{
     console.log("err:",err);
     res.status(500).json({errro:err.message ||err })
 })
-
-cron.schedule('* * * * *', () => {
-  
-  console.log('running a task every minute');
-});
 
 app.post("/sign-in",
   (req, res, next) => {

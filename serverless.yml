@@ -1,13 +1,13 @@
-service: express-app
+service: film-feed
 
 provider:
   name: aws
-  runtime: nodejs14.x
-  stage: dev
-  region: us-east-1
+  runtime: nodejs20.x
+  stage: prod
+  region: ap-south-1
 
 functions:
-  app:
+  film-feed-backend:
     handler: app.handler
     events:
       - http:
@@ -22,7 +22,6 @@ plugins:
 
 package:
   exclude:
-    - node_modules/**
     - .gitignore
     - .git/**
 
