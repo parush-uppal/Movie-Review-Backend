@@ -4,10 +4,9 @@ on:
   push:
     branches:
       - master
-      - serverless-lambda-changes
 
 jobs:
-  deploy:
+  Deploy:
     runs-on: ubuntu-latest
 
     steps:
