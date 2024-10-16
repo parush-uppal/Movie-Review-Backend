@@ -1,0 +1,27 @@
+service: film-feed
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  stage: prod
+  region: ap-south-1
+
+functions:
+  film-feed-backend:
+    handler: app.handler
+    events:
+      - http:
+          path: /
+          method: any
+      - http:
+          path: /{proxy+}
+          method: any
+
+plugins:
+  - serverless-offline
+
+package:
+  exclude:
+    - .gitignore
+    - .git/**
+

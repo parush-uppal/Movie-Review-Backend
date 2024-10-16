@@ -11,7 +11,8 @@ const movieRouter = require("./routes/movie")
 const reviewRouter = require("./routes/review")
 const adminRouter = require("./routes/admin");
 const { handelNotFound } = require("./utils/helper");
-var cron = require('node-cron');
+const serverless = require('serverless-http');
+
 
 const app = express();
 app.use(cors())
@@ -30,11 +31,6 @@ app.use((err,req,res,next)=>{
     res.status(500).json({errro:err.message ||err })
 })
 
-cron.schedule('* * * * *', () => {
-  
-  console.log('running a task every minute');
-});
-
 app.post("/sign-in",
   (req, res, next) => {
     const { email, password } = req.body
@@ -46,8 +42,12 @@ app.post("/sign-in",
     res.send("<h1>Hello I am from your backend about</h1>");
   });
 
-const PORT = process.env.PORT || 8000
-app.listen(PORT, () => {
-  console.log("the port is listening on port " + PORT);
-  // Dummy
-});
+
+// Code to run it locally
+// const PORT = process.env.PORT || 8000
+// app.listen(PORT, () => {
+//   console.log("the port is listening on port " + PORT);
+//   // Dummy
+// });
+
+module.exports.handler = serverless(app); // Export the app for serverless
