@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - serverless-lambda-changes
 
 jobs:
   deploy:
