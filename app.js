@@ -43,11 +43,12 @@ app.post("/sign-in",
   });
 
 
-// Code to run it locally
-// const PORT = process.env.PORT || 8000
-// app.listen(PORT, () => {
-//   console.log("the port is listening on port " + PORT);
-//   // Dummy
-// });
+;
 
-module.exports.handler = serverless(app); // Export the app for serverless
+
+
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log("the port is listening on port " + PORT);
+
+});
